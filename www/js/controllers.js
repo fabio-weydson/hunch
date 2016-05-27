@@ -1,16 +1,37 @@
 angular.module('app.controllers', [])
   
-.controller('principalCtrl', function($scope,$state) {
+.controller('principalCtrl', function($scope,$state,  $ionicPopup) {
+
+     $scope.showAlert = function(title,msg) {
+           var alertPopup = $ionicPopup.alert({
+             title: title,
+             template: msg
+           });
+    };
 
     $scope.registro  = {
     	tipo1: 0,
     	tipo2: 0,
     	tipo3: 0
     }
+    $scope.prosseguir = false;
+    $scope.check = function(){
+
+      if(($scope.registro.tipo1) || ($scope.registro.tipo2) || ($scope.registro.tipo3)) {
+        $scope.prosseguir = 1;
+      } else {
+        $scope.prosseguir = 0;
+      }
+    }
  
     $scope.goRegistro = function(){
-		    $state.go('registro', {TipoCadastro1: $scope.registro.tipo1,TipoCadastro2: $scope.registro.tipo2,TipoCadastro3: $scope.registro.tipo3});
+        if($scope.prosseguir){
+		      $state.go('registro', {TipoCadastro1: $scope.registro.tipo1,TipoCadastro2: $scope.registro.tipo2,TipoCadastro3: $scope.registro.tipo3});
+        } else {
+          $scope.showAlert('Erro','Selecione um ou mais tipos de cadastro'); 
+        }
 	}   
+
     $scope.goConsultar = function(){
             $state.go('consultar');
     }  
@@ -30,8 +51,8 @@ angular.module('app.controllers', [])
         nome: '',
         email : '',
         cpf : '',
-        ip: '',
-        cep: '',
+        ip: '092.168.0.1',
+        cep: '00000000',
         data_nascimento: '',
         ddd: '',
         celular: '',
@@ -49,7 +70,6 @@ angular.module('app.controllers', [])
               dataType: 'json',
               url: "http://ipv4.myexternalip.com/json",
               success: function( data ) {
-
                         $scope.$apply(function () {
                         $scope.registro.ip = data.ip;
                 });
@@ -72,7 +92,9 @@ angular.module('app.controllers', [])
            var alertPopup = $ionicPopup.alert({
              title: title,
              template: msg
-           });
+           },
+           $('#end_numero').trigger('focus')
+           );
     };
 
 
@@ -85,8 +107,8 @@ angular.module('app.controllers', [])
               dataType: 'json',
               url: "https://viacep.com.br/ws/"+$scope.registro.cep+"/json/",
                statusCode: {
-                400: function(msg) { $scope.showAlert('CEP inválido','Confira o número digitado.'); $ionicLoading.hide(); } // Bad Request
-                ,404: function(msg) { $scope.showAlert('CEP inválido','Confira o número digitado.'); $ionicLoading.hide() } // Not Found
+                400: function(msg) { $scope.showAlert('CEP não encontrado','Confira o cep ou preencha manualmente o endereço.'); $ionicLoading.hide(); } // Bad Request
+                ,404: function(msg) { $scope.showAlert('CEP não encontrado','Confira o cep ou preencha manualmente o endereço.'); $ionicLoading.hide(); } // Not Found
               },
                 success: function( data ) {
                         $scope.$apply(function () {
@@ -99,7 +121,11 @@ angular.module('app.controllers', [])
                         $scope.registro.uf = data.uf;
                         $ionicLoading.hide()
                 });
+                },
+                error: function( data ) {
+                     $scope.showAlert('CEP não encontrado','Confira o cep ou preencha manualmente o endereço.'); $ionicLoading.hide()
                 }
+
             });
       };
   $scope.getFormattedDate = function(date) {
