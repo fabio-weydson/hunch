@@ -1,5 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.hunchway.app" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android = "http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="UTF-8"?>
+<widget 
+  xmlns="http://www.w3.org/ns/widgets" 
+  xmlns:android = "http://schemas.android.com/apk/res/android"
+  id="com.hunchway.app" 
+  version="0.3" 
+  xmlns:cdv="http://cordova.apache.org/ns/1.0" 
+>
   <name>Hunchway</name>
   <description>
         New app
@@ -50,16 +56,15 @@
 <gap:plugin name="cordova-plugin-splashscreen" source="npm" version="2.1.0" />
 <gap:plugin name="cordova-plugin-statusbar" source="npm" version="1.0.1" />
 <gap:plugin name="cordova-plugin-whitelist" source="npm" version="1.0.0" />
-<gap:plugin name="it.witek.cordova.plugin.background-mode" source="pgb" version="0.6.3" />
 <gap:plugin name="nl.x-services.plugins.socialsharing" source="pgb" version="4.3.8" />
 <gap:plugin name="nl.x-services.plugins.toast" source="pgb" version="2.0.2" />
  <gap:plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
-<gap:icon src="icon.png" />
-<gap:splash src="splash.png" /> 
+<icon src="icon.png" />
+<splash src="splash.png" /> 
 
 
   <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>301</string>
+    <string>00120</string>
     </gap:config-file>
     <gap:config-file platform="android" parent="/manifest/application">
     <activity android:launchMode="singleInstance" />
