@@ -2,7 +2,7 @@
 <widget id="com.hunchway.app" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android = "http://schemas.android.com/apk/res/android">
   <name>Hunchway</name>
   <description>
-        New app
+        
     </description>
   <author email="totalsite@hotmail.com" href="http://totalsite.com.br/">
       Total site
@@ -54,7 +54,7 @@
 <gap:plugin name="it.witek.cordova.plugin.background-mode" source="pgb" version="0.6.3" />
 <gap:plugin name="nl.x-services.plugins.socialsharing" source="pgb" version="4.3.8" />
 <gap:plugin name="nl.x-services.plugins.toast" source="pgb" version="2.0.2" />
- <gap:plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
+
 <gap:icon src="icon.png" />
 <gap:splash src="splash.png" /> 
 
