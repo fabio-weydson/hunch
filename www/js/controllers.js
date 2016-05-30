@@ -1,13 +1,57 @@
 angular.module('app.controllers', [])
   
-.controller('principalCtrl', function($scope,$state,  $ionicPopup) {
+.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
 
-     $scope.showAlert = function(title,msg) {
+   // Triggered on a button click, or some other target
+ $scope.show = function(reg_id) {
+  console.log(reg_id)
+   // Show the action sheet
+   var hideSheet = $ionicActionSheet.show({
+     buttons: [
+       { text: 'Editar' }
+     ],
+     destructiveText: 'Excluir',
+     titleText: 'Escolha uma ação',
+     cancelText: 'Cancelar',
+     cancel: function() {
+          return false;
+        },
+     buttonClicked: function(index) {
+       return true;
+     }
+   });
+
+   // For example's sake, hide the sheet after two seconds
+   $timeout(function() {
+     hideSheet();
+   }, 2000);
+
+ };
+
+
+
+     $scope.registros_offline = JSON.parse(localStorage.getItem('registros'));
+    
+     
+      if(!$scope.registros_offline){
+           $scope.registros_offline = {};
+          localStorage.setItem('registros', JSON.stringify($scope.registros_offline));   
+      }
+
+
+   $scope.showAlert = function(title,msg) {
            var alertPopup = $ionicPopup.alert({
              title: title,
              template: msg
            });
     };
+
+      document.addEventListener("offline", onOffline, false);
+      function onOffline() {
+         $scope.showAlert('Sem conexão com a internet', ' Você poderá sincronizar seus dados posteriormente quando houver conexão disponível.');
+      }
+
+   
 
     $scope.registro  = {
     	tipo1: 0,
@@ -43,6 +87,12 @@ angular.module('app.controllers', [])
 
 	$scope.rand = Math.floor((Math.random() * 999999999999) + 1);
 
+      $scope.registros_offline = JSON.parse(localStorage.getItem('registros'));
+      if(!$scope.registros_offline){
+           $scope.registros_offline = {};
+          localStorage.setItem('registros', JSON.stringify($scope.registros_offline));   
+      }
+
       $scope.registro = {
         id : $scope.rand,
         tipo1: $stateParams.TipoCadastro1,
@@ -70,6 +120,7 @@ angular.module('app.controllers', [])
               dataType: 'json',
               url: "http://ipv4.myexternalip.com/json",
               success: function( data ) {
+
                         $scope.$apply(function () {
                         $scope.registro.ip = data.ip;
                 });
@@ -77,8 +128,11 @@ angular.module('app.controllers', [])
     });
   
   $scope.ContinuaRegistro = function(form) {
+    console.log($scope.registro)
         registroService.setRegistro($scope.registro);
+ 
         $state.go('endereco', {cep: $scope.registro.cep});
+
   };  
 
 
@@ -128,7 +182,7 @@ angular.module('app.controllers', [])
 
             });
       };
-  $scope.getFormattedDate = function(date) {
+    $scope.getFormattedDate = function(date) {
       var year = date.getFullYear();
       var month = (1 + date.getMonth()).toString();
       month = month.length > 1 ? month : '0' + month;
@@ -136,10 +190,19 @@ angular.module('app.controllers', [])
       day = day.length > 1 ? day : '0' + day;
       return year + '-' + month + '-' + day;
     }
-  $scope.ToCommaJson = function(json){
+    $scope.ToCommaJson = function(json){
        return res = $.map(json,function(data){ return data;});
     }
+
+    $scope.GuardaOffline = function(){
+        $scope.registros_offline[$scope.registro.id] = $scope.registro;
+        localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
+        $state.go('sincronizar');
+        $ionicLoading.hide();
+    }
+
     $scope.efetuaRegistro = function(form) {
+
         $ionicLoading.show({
           template: 'Aguarde...'
         });
@@ -154,7 +217,7 @@ angular.module('app.controllers', [])
                 cpf : $scope.registro.cpf,
                 ip: $scope.registro.ip,
                 cep: $scope.registro.cep,
-                data_nascimento:  $scope.getFormattedDate($scope.registro.data_nascimento),
+                data_nascimento:  $scope.registro.data_nascimento,
                 celular_ddd: $scope.registro.ddd,
                 celular_numero: $scope.registro.celular,
                 endereco: $scope.registro.endereco,
@@ -167,17 +230,18 @@ angular.module('app.controllers', [])
             dataType: 'json',
             url: "http://www.hunchway.com.br/api/client",
             statusCode: {
-                400: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                412: function(msg) { var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg)); $ionicLoading.hide(); },
+                400: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
+                503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
+                500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
+                404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
+                412: function(msg) {  $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg)); $ionicLoading.hide(); }
               },
             success: function( data ) {
                 $state.go('sucesso');
                 $ionicLoading.hide()
                 
             }
+
         });
     }
 

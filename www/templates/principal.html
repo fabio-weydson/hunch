@@ -4,13 +4,14 @@
         <div class="logotipo">
             <img src="img/logo_w.png" width="209" height="auto" style="display: block; margin-left: auto; margin-right: auto;">
         </div>
-        <form id="principal-form10" class="list" name="myForm1">
+    
             <div class="spacer" style="width: 300px; height: 75px;"></div>
+            <a ng-if="registros_offline" class=" button button-warning button-block" ui-sref="sincronizar">SINCRONIZAÇÃO</a>
             <ion-item class="item-divider " id="principal-list-item-divider10">Tipo de Cadastro</ion-item>
             <ion-checkbox value="1" ng-model="registro.tipo1" ng-click="check()" ng-true-value="1">MOTOBOY</ion-checkbox>
             <ion-checkbox value="2" ng-model="registro.tipo2" ng-click="check()" ng-true-value="2">CAMINHONEIRO</ion-checkbox>
             <ion-checkbox value="3" ng-model="registro.tipo3" ng-click="check()" ng-true-value="3">CONTRATANTE</ion-checkbox>
-        </form>
+ 
         <a id="principal-button19" class=" button button-positive  button-block " ng-click="goRegistro()" >CADASTRE-SE</a>
         <a id="principal-button18" class=" button button-light  button-block " ng-click="goConsultar()">CONSULTAR CADASTRO</a>
     </ion-content>

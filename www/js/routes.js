@@ -40,6 +40,12 @@ angular.module('app.routes', [])
     controller: 'sucessoCtrl'
   })
 
+  .state('sincronizar', {
+    url: '/sincronizar',
+    templateUrl: 'templates/sincronizar.html',
+    controller: 'principalCtrl'
+  })
+
 $urlRouterProvider.otherwise('/principal')
 
   
