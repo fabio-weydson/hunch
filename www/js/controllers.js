@@ -28,16 +28,15 @@ angular.module('app.controllers', [])
 
  };
 
-
-
-     $scope.registros_offline = JSON.parse(localStorage.getItem('registros'));
-    
+    $scope.registros_offline_local = localStorage.getItem('registros');
+    if($scope.registros_offline_local){
+     $scope.registros_offline = JSON.parse($scope.registros_offline_local );
+    }
      
       if(!$scope.registros_offline){
-           $scope.registros_offline = {};
-          localStorage.setItem('registros', JSON.stringify($scope.registros_offline));   
+        console.log('asdasdsd');
+          localStorage.setItem('registros','');   
       }
-
 
    $scope.showAlert = function(title,msg) {
            var alertPopup = $ionicPopup.alert({
@@ -87,12 +86,6 @@ angular.module('app.controllers', [])
 
 	$scope.rand = Math.floor((Math.random() * 999999999999) + 1);
 
-      $scope.registros_offline = JSON.parse(localStorage.getItem('registros'));
-      if(!$scope.registros_offline){
-           $scope.registros_offline = {};
-          localStorage.setItem('registros', JSON.stringify($scope.registros_offline));   
-      }
-
       $scope.registro = {
         id : $scope.rand,
         tipo1: $stateParams.TipoCadastro1,
@@ -101,7 +94,7 @@ angular.module('app.controllers', [])
         nome: '',
         email : '',
         cpf : '',
-        ip: '092.168.0.1',
+        ip: '192.168.0.1',
         cep: '00000000',
         data_nascimento: '',
         ddd: '',
@@ -143,6 +136,7 @@ angular.module('app.controllers', [])
     $scope.registro = registroService.getRegistro();
 
       $scope.showAlert = function(title,msg) {
+         $ionicLoading.hide();
            var alertPopup = $ionicPopup.alert({
              title: title,
              template: msg
@@ -194,7 +188,16 @@ angular.module('app.controllers', [])
        return res = $.map(json,function(data){ return data;});
     }
 
+
+
     $scope.GuardaOffline = function(){
+       $scope.registros_offline_local = localStorage.getItem('registros');
+    if(!$scope.registros_offline_local){
+     $scope.registros_offline = {};
+    } else {
+      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
+    }
+     
         $scope.registros_offline[$scope.registro.id] = $scope.registro;
         localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
         $state.go('sincronizar');
@@ -240,6 +243,12 @@ angular.module('app.controllers', [])
                 $state.go('sucesso');
                 $ionicLoading.hide()
                 
+            },
+            timeout: 5000,
+            error: function(jqXHR, textStatus, errorThrown) {
+              if(textStatus=='timeout'){
+                $scope.showAlert('Tempo excedido','Esgotado o tempo limite, tente novamente mais tarde.');  $scope.GuardaOffline();
+              }
             }
 
         });

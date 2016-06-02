@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget 
   id="com.hunchway.app" 
-  version="0.4" 
+  version="0.6" 
   xmlns:gap="http://phonegap.com/ns/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns="http://www.w3.org/ns/widgets" 
@@ -63,6 +63,26 @@
 <icon src="icon.png" />
 <splash src="splash.png" /> 
 
+<!-- SPLASH -->
+ <platform name="android">
+    <!-- you can use any density that exists in the Android project -->
+    <splash src="resources/android/splash/hdpi-landscape.png" density="land-hdpi"/>
+    <splash src="resources/android/splash/ldpi-landscape.png" density="land-ldpi"/>
+    <splash src="resources/android/splash/mdpi-landscape.png" density="land-mdpi"/>
+    <splash src="resources/android/splash/xhdpi-landscape.png" density="land-xhdpi"/>
+
+    <splash src="resources/android/splash/hdpi-portrait.png" density="port-hdpi"/>
+    <splash src="resources/android/splash/ldpi-portrait.png" density="port-ldpi"/>
+    <splash src="resources/android/splash/mdpi-portrait.png" density="port-mdpi"/>
+    <splash src="resources/android/splash/xhdpi-portrait.png" density="port-xhdpi"/>
+
+</platform>
+ <platform name="android">
+              <icon src="resources/android/icon/ldpi.png" density="ldpi" />
+              <icon src="resources/android/icon/mdpi.png" density="mdpi" />
+              <icon src="resources/android/icon/hdpi.png" density="hdpi" />
+              <icon src="resources/android/icon/xhdpi.png" density="xhdpi" />
+     </platform>
 
   <gap:config-file platform="ios" parent="CFBundleShortVersionString">
     <string>00120</string>
