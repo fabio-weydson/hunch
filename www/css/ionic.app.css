@@ -8512,7 +8512,7 @@ progress {
   position: relative;
   display: inline-block;
   margin: 0;
-  padding: 0 12px;
+  padding: 12px 12px;
   min-width: 52px;
   min-height: 47px;
   border-width: 1px;
@@ -8522,8 +8522,9 @@ progress {
   text-align: center;
   text-overflow: ellipsis;
   font-size: 16px;
-  line-height: 42px;
-  cursor: pointer; }
+  /* line-height: 42px; */
+  cursor: pointer;
+  }
   .button:hover {
     color: #444;
     text-decoration: none; }
