@@ -46,6 +46,12 @@ angular.module('app.routes', [])
     controller: 'principalCtrl'
   })
 
+   .state('termos', {
+    url: '/termos',
+    templateUrl: 'templates/termos.html',
+    controller: 'termosCtrl'
+  })
+
 $urlRouterProvider.otherwise('/principal')
 
   

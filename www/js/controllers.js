@@ -1,14 +1,13 @@
 angular.module('app.controllers', [])
   
 .controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
-
+localStorage.removeItem('ContinuaRegistro');
    // Triggered on a button click, or some other target
  $scope.show = function(reg_id) {
-  console.log(reg_id)
    // Show the action sheet
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Editar' }
+       { text: 'Sincronizar' }
      ],
      destructiveText: 'Excluir',
      titleText: 'Escolha uma ação',
@@ -17,6 +16,8 @@ angular.module('app.controllers', [])
           return false;
         },
      buttonClicked: function(index) {
+       localStorage.setItem('ContinuaRegistro',reg_id);
+        $state.go('registro');
        return true;
      }
    });
@@ -24,7 +25,7 @@ angular.module('app.controllers', [])
    // For example's sake, hide the sheet after two seconds
    $timeout(function() {
      hideSheet();
-   }, 2000);
+   }, 5000);
 
  };
 
@@ -34,7 +35,6 @@ angular.module('app.controllers', [])
     }
      
       if(!$scope.registros_offline){
-        console.log('asdasdsd');
           localStorage.setItem('registros','');   
       }
 
@@ -83,7 +83,15 @@ angular.module('app.controllers', [])
 })
    
 .controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService) {
+  if(localStorage.getItem('ContinuaRegistro')){
 
+      $scope.registros_offline_local = localStorage.getItem('registros');
+      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
+      $scope.registro_continuar = localStorage.getItem('ContinuaRegistro');
+      $scope.registro = $scope.registros_offline[$scope.registro_continuar];
+      console.log($scope.registro);
+
+  } else {
 	$scope.rand = Math.floor((Math.random() * 999999999999) + 1);
 
       $scope.registro = {
@@ -95,7 +103,7 @@ angular.module('app.controllers', [])
         email : '',
         cpf : '',
         ip: '192.168.0.1',
-        cep: '00000000',
+        cep: '',
         data_nascimento: '',
         ddd: '',
         celular: '',
@@ -106,6 +114,7 @@ angular.module('app.controllers', [])
         cidade: '',
         uf: ''
     };  
+  }
 
 
     $.ajax({
@@ -184,8 +193,9 @@ angular.module('app.controllers', [])
       day = day.length > 1 ? day : '0' + day;
       return year + '-' + month + '-' + day;
     }
-    $scope.ToCommaJson = function(json){
-       return res = $.map(json,function(data){ return data;});
+     $scope.ToCommaJson = function(json){
+       var res = $.map(json,function(data){ return data.toString().replace(',', '<br/>'); });
+       return res;
     }
 
 
@@ -202,6 +212,17 @@ angular.module('app.controllers', [])
         localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
         $state.go('sincronizar');
         $ionicLoading.hide();
+    }
+    $scope.AtualizaOffline = function(id,res){
+      console.log(id+res);
+        $scope.registros_offline_local = localStorage.getItem('registros');
+        $scope.registros_offline = JSON.parse($scope.registros_offline_local);
+
+      if(res=='excluir'){
+          delete $scope.registros_offline[id];
+          localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
+
+      } 
     }
 
     $scope.efetuaRegistro = function(form) {
@@ -240,32 +261,47 @@ angular.module('app.controllers', [])
                 412: function(msg) {  $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg)); $ionicLoading.hide(); }
               },
             success: function( data ) {
-                $state.go('sucesso');
-                $ionicLoading.hide()
+                $scope.registros_offline_local = localStorage.getItem('registros');
+                if($scope.registros_offline_local){
+                    $scope.AtualizaOffline($scope.registro.id,'sucesso');
+                }
+                $ionicLoading.hide();
+                 $state.go('sucesso');
                 
             },
-            timeout: 5000,
+            timeout: 10000,
             error: function(jqXHR, textStatus, errorThrown) {
+
+              console.log(textStatus)
               if(textStatus=='timeout'){
                 $scope.showAlert('Tempo excedido','Esgotado o tempo limite, tente novamente mais tarde.');  $scope.GuardaOffline();
+              } else {
+                $scope.showAlert('Sem conexão','Os dados serão armazenados e poderão ser sincronizados quando houver conexão');  $scope.GuardaOffline();
               }
             }
 
         });
     }
-
-    $scope.BuscaCEP();
+    if(!$scope.registro.endereco){
+      $scope.BuscaCEP();
+    }
 })
    
 .controller('consultarCtrl', function($scope,$stateParams,$state, $http, $ionicLoading, $ionicPopup) {
 
      $scope.showAlert = function(title,msg) {
+      $ionicLoading.hide()
            var alertPopup = $ionicPopup.alert({
              title: title,
              template: msg
            });
     };
 
+    document.addEventListener("offline", onOffline, false);
+      function onOffline() {
+         $scope.showAlert('Sem conexão com a internet', 'A consulta só está disponível quando há conexão com a internet.');
+         $scope.desativado = true;
+    }
 
     $scope.rand = Math.floor((Math.random() * 999999999999) + 1);
 
@@ -278,7 +314,8 @@ angular.module('app.controllers', [])
     $scope.resultado = 'vazio';
 
     $scope.ToCommaJson = function(json){
-       return res = $.map(json,function(data){ return data;});
+       var res = $.map(json,function(data){ return data.toString().replace(',', '<br/>'); });
+       return res;
     }
 
     $scope.consultarCadastro = function(form) {
@@ -304,11 +341,11 @@ angular.module('app.controllers', [])
                             dataType: 'json',
                             url: "http://www.hunchway.com.br/api/login",
                             statusCode: {
-                                400: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                                503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                                500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                                404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $ionicLoading.hide() },
-                                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg)); $ionicLoading.hide(); }
+                                400: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente'); },
+                                503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente'); },
+                                500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente'); },
+                                404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente'); },
+                                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg)); }
                               },
                             success: function( data ) {
                                 $ionicLoading.hide();
@@ -345,4 +382,29 @@ angular.module('app.controllers', [])
 .controller('sucessoCtrl', function($scope, $stateParams, $state) {
     $scope.mensagem = $stateParams.mensagem;
 })
- 
+
+.controller('termosCtrl', function($scope, $stateParams, $state,$http,$ionicLoading) {
+     $ionicLoading.show({
+          template: 'Carregando...'
+        });
+
+    $.ajax({
+              type: "GET",
+              dataType: 'json',
+              url: "http://www.hunchway.com.br/api/termos",
+              success: function( data ) {
+                $ionicLoading.hide()
+                        $scope.$apply(function () {
+                        $scope.mensagem = data.termos;
+              });
+              },
+              error: function(data){
+                $ionicLoading.hide()
+                  $scope.$apply(function () {
+                        $scope.mensagem = "Falha na conexão.";
+              });
+              }
+
+    
+})
+})

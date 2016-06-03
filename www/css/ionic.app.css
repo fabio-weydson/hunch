@@ -7767,8 +7767,9 @@ textarea[disabled],
 input[readonly]:not(.cloned-text-input),
 textarea[readonly]:not(.cloned-text-input),
 select[readonly] {
-  background-color: #f8f8f8;
-  cursor: not-allowed; }
+  background-color: rgb(255, 255, 255);
+  cursor: not-allowed;
+  }
 
 input[type="radio"][disabled],
 input[type="checkbox"][disabled],
@@ -8621,7 +8622,8 @@ progress {
       border-color: transparent;
       background: none;
       box-shadow: none;
-      color: #387ef5; }
+      color: #FFF;
+      }
     .button.button-positive.button-icon {
       border-color: transparent;
       background: none; }

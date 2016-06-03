@@ -5,15 +5,15 @@
             <img src="img/logo.png" width="209px" height="auto" style="display: block; margin-left: auto; margin-right: auto;">
         </div>
         <div class="spacer" style="height: 40px;"></div>
-        <form id="consultar-form9" class="list ">
+        <form id="consultar-form9" class="list " name="myForm3">
             <label class="item item-input " id="consultar-input9">
-                <input type="email" placeholder="E-mail" ng-model="registro.email">
+                <input type="email"  ng-disabled="desativado" required placeholder="E-mail" ng-model="registro.email">
             </label>
             <label class="item item-input " id="consultar-input10" >
-                <input type="tel" placeholder="CPF" ng-model="registro.cpf" ui-mask="999.999.999-99"  ui-mask-placeholder ui-mask-placeholder-char="_">
+                <input type="tel" placeholder="CPF"  ng-disabled="desativado"  required ng-model="registro.cpf" ui-mask="999.999.999-99"  ui-mask-placeholder ui-mask-placeholder-char="_">
             </label>
         </form>
-        <a ng-click="consultarCadastro()" id="consultar-button12" class=" button button-positive  button-block ">CONSULTAR CADASTRO</a>
+        <a ng-click="consultarCadastro()" id="consultar-button12" ng-disabled="desativado" class=" button button-positive  button-block " ng-disabled="myForm3.$invalid">CONSULTAR CADASTRO</a>
         <a ui-sref="principal" id="consultar-button15" class=" button button-positive  button-block button-clear ">ou Realizar Cadastro</a>
     </ion-content>
 </ion-view>
