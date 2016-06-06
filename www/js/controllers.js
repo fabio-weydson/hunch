@@ -2,6 +2,17 @@ angular.module('app.controllers', [])
   
 .controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
 localStorage.removeItem('ContinuaRegistro');
+
+ $scope.AtualizaOffline = function(id,res){
+        $scope.registros_offline_local = localStorage.getItem('registros');
+        $scope.registros_offline = JSON.parse($scope.registros_offline_local);
+
+      if(res=='excluir'){
+          delete $scope.registros_offline[id];
+          localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
+
+      } 
+    }
    // Triggered on a button click, or some other target
  $scope.show = function(reg_id) {
    // Show the action sheet
@@ -10,7 +21,6 @@ localStorage.removeItem('ContinuaRegistro');
        { text: 'Sincronizar' }
      ],
      destructiveText: 'Excluir',
-     titleText: 'Escolha uma ação',
      cancelText: 'Cancelar',
      cancel: function() {
           return false;
@@ -19,6 +29,14 @@ localStorage.removeItem('ContinuaRegistro');
        localStorage.setItem('ContinuaRegistro',reg_id);
         $state.go('registro');
        return true;
+     },
+     destructiveButtonClicked: function(index) {
+       $scope.AtualizaOffline(reg_id,'excluir');
+        $scope.registros_offline_local = false;
+       $('#'+reg_id).fadeOut(500, function(){
+         hideSheet();
+
+       });
      }
    });
 
@@ -37,6 +55,7 @@ localStorage.removeItem('ContinuaRegistro');
       if(!$scope.registros_offline){
           localStorage.setItem('registros','');   
       }
+$scope.registros_offline_local_total = Object.keys($scope.registros_offline).length;
 
    $scope.showAlert = function(title,msg) {
            var alertPopup = $ionicPopup.alert({
@@ -211,6 +230,7 @@ localStorage.removeItem('ContinuaRegistro');
         $scope.registros_offline[$scope.registro.id] = $scope.registro;
         localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
         $state.go('sincronizar');
+
         $ionicLoading.hide();
     }
     $scope.AtualizaOffline = function(id,res){
@@ -266,7 +286,28 @@ localStorage.removeItem('ContinuaRegistro');
                     $scope.AtualizaOffline($scope.registro.id,'sucesso');
                 }
                 $ionicLoading.hide();
+                $scope.registro = {
+                      id : '',
+                      tipo1: $stateParams.TipoCadastro1,
+                      tipo2: $stateParams.TipoCadastro2,
+                      tipo3: $stateParams.TipoCadastro3,
+                      nome: '',
+                      email : '',
+                      cpf : '',
+                      ip: '192.168.0.1',
+                      cep: '',
+                      data_nascimento: '',
+                      ddd: '',
+                      celular: '',
+                      endereco: '',
+                      numero: '',
+                      complemento: '',
+                      bairro: '',
+                      cidade: '',
+                      uf: ''
+                  };  
                  $state.go('sucesso');
+
                 
             },
             timeout: 10000,

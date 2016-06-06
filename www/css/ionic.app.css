@@ -8622,6 +8622,9 @@ progress {
       border-color: transparent;
       background: none;
       box-shadow: none;
+
+      }
+      .button.button-positive.btn-white {
       color: #FFF;
       }
     .button.button-positive.button-icon {

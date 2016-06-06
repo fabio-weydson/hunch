@@ -12,6 +12,7 @@ angular.module('app.routes', [])
 
       .state('principal', {
     url: '/principal',
+     cache: false,
     templateUrl: 'templates/principal.html',
     controller: 'principalCtrl'
   })
@@ -42,6 +43,7 @@ angular.module('app.routes', [])
 
   .state('sincronizar', {
     url: '/sincronizar',
+    cache: false,
     templateUrl: 'templates/sincronizar.html',
     controller: 'principalCtrl'
   })

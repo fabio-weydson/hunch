@@ -6,7 +6,7 @@
         </div>
     
             <div class="spacer" style="width: 300px; height: 75px;"></div>
-            <a ng-show="registros_offline_local" class=" button button-warning button-block" ui-sref="sincronizar">SINCRONIZAÇÃO</a>
+            <a ng-show="registros_offline_local_total" class=" button button-warning button-block" ui-sref="sincronizar">SINCRONIZAÇÃO</a>
             <ion-item class="item-divider " id="principal-list-item-divider10">Tipo de Cadastro</ion-item>
             <ion-checkbox value="1" ng-model="registro.tipo1" ng-click="check()" ng-true-value="1">MOTOBOY</ion-checkbox>
             <ion-checkbox value="2" ng-model="registro.tipo2" ng-click="check()" ng-true-value="2">CAMINHONEIRO</ion-checkbox>
@@ -14,6 +14,6 @@
  
         <a id="principal-button19" class=" button button-positive  button-block " ng-click="goRegistro()" >CADASTRE-SE</a>
         <a id="principal-button18" class=" button button-light  button-block " ng-click="goConsultar()">CONSULTAR CADASTRO</a>
-        <a ui-sref="termos" id="consultar-button15" class=" button button-positive  button-block button-clear ">Termos e Condições</a>
+        <a href="http://www.hunchway.com/termos-e-condicoes.html" target="_blank" id="consultar-button15" class=" button button-positive  button-block button-clear btn-white ">Termos e Condições</a>
     </ion-content>
 </ion-view>
