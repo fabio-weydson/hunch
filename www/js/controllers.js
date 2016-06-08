@@ -49,13 +49,15 @@ localStorage.removeItem('ContinuaRegistro');
 
     $scope.registros_offline_local = localStorage.getItem('registros');
     if($scope.registros_offline_local){
+      $scope.registros_offline_local_total = true;
      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
     }
      
       if(!$scope.registros_offline){
           localStorage.setItem('registros','');   
       }
-$scope.registros_offline_local_total = Object.keys($scope.registros_offline).length;
+
+
 
    $scope.showAlert = function(title,msg) {
            var alertPopup = $ionicPopup.alert({
