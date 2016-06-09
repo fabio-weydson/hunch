@@ -60,7 +60,9 @@
 <gap:plugin name="nl.x-services.plugins.socialsharing" source="pgb" version="4.3.8" />
 <gap:plugin name="nl.x-services.plugins.toast" source="pgb" version="2.0.2" />
  <gap:plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
- <gap:plugin name="com.plugins.shortcut" spec="0.1.1" source="pgb" />
+  <gap:plugin name="com.plugins.shortcut" />
+
+ 
 
 <icon src="icon.png" />
 <splash src="splash.png" /> 

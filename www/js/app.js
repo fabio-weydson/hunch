@@ -15,6 +15,17 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(false);
     }
+    if (!localStorage.getItem('shortcut')) {
+    window.plugins.Shortcut.CreateShortcut("Text to show", successfunc, failfunc);
+    localStorage.setItem('shortcut', true);
+    function successfunc(){
+      alert('Atalho adicionado a tela inicial')
+    }
+    function failfunc(){
+       alert('Falha ao criar atalho. Adicione manualmente.')
+    }
+}
+
     document.addEventListener('focusout', function(e) {window.scrollTo(0, 0)});
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
