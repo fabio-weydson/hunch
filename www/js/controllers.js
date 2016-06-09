@@ -2,7 +2,6 @@ angular.module('app.controllers', [])
   
 .controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
 localStorage.removeItem('ContinuaRegistro');
-
   $scope.CloseApp = function(){
       if (navigator.app) {
             navigator.app.exitApp();
@@ -59,14 +58,12 @@ localStorage.removeItem('ContinuaRegistro');
 
     $scope.registros_offline_local = localStorage.getItem('registros');
     if($scope.registros_offline_local){
-      $scope.registros_offline_local_total = true;
      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
     }
-     
+    
       if(!$scope.registros_offline){
           localStorage.setItem('registros','{}');   
       }
-
 
 
    $scope.showAlert = function(title,msg) {
@@ -369,12 +366,12 @@ localStorage.removeItem('ContinuaRegistro');
 
     $scope.consultarCadastro = function(form) {
 
-       document.addEventListener("offline", onOffline, false);
+      document.addEventListener("offline", onOffline, false);
       function onOffline() {
          $scope.showAlert('Sem conexão com a internet', 'A consulta só está disponível quando há conexão com a internet.');
          $scope.desativado = true;
-         return false;
-    }
+         $state.go('principal');
+      }
           $ionicLoading.show({
           template: 'Consultando...'
         });
@@ -412,6 +409,7 @@ localStorage.removeItem('ContinuaRegistro');
                         });
                 },
             error: function(data){
+                 onOffline();
 
             }
         });
