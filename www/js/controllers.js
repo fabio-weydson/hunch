@@ -20,8 +20,8 @@ localStorage.removeItem('ContinuaRegistro');
           localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
            $scope.registros_offline_local = localStorage.getItem('registros');
         $scope.registros_offline = JSON.parse($scope.registros_offline_local);
-        console.log($scope.registros_offline_local)
       } 
+      registroService.setRegistro($scope.registro);
     }
    // Triggered on a button click, or some other target
  $scope.show = function(reg_id) {
@@ -240,7 +240,7 @@ localStorage.removeItem('ContinuaRegistro');
         $scope.registros_offline[$scope.registro.id] = $scope.registro;
         localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
         $state.go('sincronizar');
-
+        registroService.setRegistro($scope.registro);
         $ionicLoading.hide();
     }
     $scope.AtualizaOffline = function(id,res){
@@ -292,7 +292,7 @@ localStorage.removeItem('ContinuaRegistro');
             success: function( data ) {
                 $scope.registros_offline_local = localStorage.getItem('registros');
                 if($scope.registros_offline_local){
-                    $scope.AtualizaOffline($scope.registro.id,'sucesso');
+                    $scope.AtualizaOffline($scope.registro.id,'excluir');
                 }
                 $ionicLoading.hide();
                 $scope.registro = {
@@ -316,6 +316,7 @@ localStorage.removeItem('ContinuaRegistro');
                       uf: ''
                   };  
                  $state.go('sucesso', {mensagem: data.cadastro_sucesso.mensagem});
+                 registroService.setRegistro($scope.registro);
 
                 
             },
