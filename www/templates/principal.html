@@ -6,7 +6,7 @@
         </div>
     
             <div class="spacer" style="width: 300px; height: 75px;"></div>
-            <a ng-if="registros_offline_local != '{}'" class=" button button-warning button-block" ui-sref="sincronizar">SINCRONIZAÇÃO</a>
+            <a ng-if="registros_offline_local != '{}' || registros_offline_local != ''" class=" button button-warning button-block" ui-sref="sincronizar">SINCRONIZAÇÃO</a>
             <ion-item class="item-divider " id="principal-list-item-divider10">Tipo de Cadastro</ion-item>
             <ion-checkbox value="1" ng-model="registro.tipo1" ng-click="check()" ng-true-value="1">MOTOBOY</ion-checkbox>
             <ion-checkbox value="2" ng-model="registro.tipo2" ng-click="check()" ng-true-value="2">CAMINHONEIRO</ion-checkbox>
