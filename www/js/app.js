@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives','ui.mask'])
+angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives','ui.mask','ionic-datepicker'])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     navigator.splashscreen.hide();
@@ -33,4 +33,19 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
     }
   
   });
-})
+}).config(function (ionicDatePickerProvider) {
+    var datePickerObj = {
+      inputDate: new Date(),
+      setLabel: 'OK',
+      todayLabel: 'Hoje',
+      closeLabel: 'Fechar',
+      mondayFirst: false,
+      weeksList: ["D", "S", "T", "Q", "Q", "S", "S"],
+      monthsList: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+      templateType: 'popup',
+      showTodayButton: false,
+      dateFormat: 'dd MMMM yyyy',
+      closeOnSelect: false
+    };
+    ionicDatePickerProvider.configDatePicker(datePickerObj);
+  })

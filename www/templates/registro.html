@@ -17,7 +17,7 @@
                     <input type="tel" required ng-model="registro.cpf" placeholder="CPF" ui-mask="999.999.999-99"  ui-mask-placeholder ui-mask-placeholder-char="_">
                 </label>
                 <label class="item item-input " id="registro-input7">
-                    <input  type="text" onfocus="(this.type='date')"  required ng-model="registro.data_nascimento" placeholder="Data de Nascimento">
+                    <input type="tel" ng-click="openDatePicker()"  required ng-model="registro.data_nascimento_human" placeholder="Data de Nascimento">
                 </label>
                  <label class="item item-input " id="registro-input8" style="width:30% !important;float: left;">
                     <input type="tel" required ng-model="registro.ddd" placeholder="DDD" size="3" ui-mask="99"  ui-mask-placeholder ui-mask-placeholder-char="_">
@@ -30,6 +30,7 @@
                     <input type="tel" required ng-model="registro.cep" placeholder="CEP" ui-mask="99999-999"  ui-mask-placeholder ui-mask-placeholder-char="_">
                 </label>
             </ion-list>
+              <a href="http://www.hunchway.com/termos-e-condicoes.html" target="_blank" id="consultar-button15" class=" button button-positive  button-block button-clear  ">Ao se cadastrar você aceita os <span class="calm">Termos e Condições</span></a>
             <a ng-click="ContinuaRegistro()" id="registro-button5" class=" button button-positive  button-block "  ng-disabled="myForm2.$invalid">CONTINUAR</a>
             <a ui-sref="consultar" id="registro-button9" class=" button button-positive  button-block button-clear ">ou já Possuo Cadastro</a>
             <span ng-bind-html="resultado"></span>

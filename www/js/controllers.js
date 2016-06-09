@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
   
-.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
+.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout,registroService) {
 localStorage.removeItem('ContinuaRegistro');
   $scope.CloseApp = function(){
       if (navigator.app) {
@@ -27,10 +27,10 @@ localStorage.removeItem('ContinuaRegistro');
    // Show the action sheet
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Sincronizar' }
+       { text: '<i class="icon ion-upload"></i> Sincronizar' }
      ],
-     destructiveText: 'EXCLUIR',
-     cancelText: 'CANCELAR',
+     destructiveText: '<i class="icon ion-ios-trash"></i> Excluir',
+     cancelText: 'Cancelar',
      cancel: function() {
           return false;
         },
@@ -44,7 +44,6 @@ localStorage.removeItem('ContinuaRegistro');
         
        $('#'+reg_id).fadeOut(500, function(){
          hideSheet();
-
        });
      }
    });
@@ -110,7 +109,48 @@ localStorage.removeItem('ContinuaRegistro');
    
 })
    
-.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService) {
+.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService,ionicDatePicker) {
+   $scope.getFormattedDate = function(date,type) {
+      var year = date.getFullYear();
+      var month = (1 + date.getMonth()).toString();
+      month = month.length > 1 ? month : '0' + month;
+      var day = date.getDate().toString();
+      day = day.length > 1 ? day : '0' + day;
+      if(type=='human'){
+        return day + '/' + month + '/' + year;
+      } else {
+        return year + '-' + month + '-' + day;
+      }
+    }
+  var ipObj1 = {
+      callback: function (val) {  //Mandatory
+       $scope.registro.data_nascimento = $scope.getFormattedDate(new Date(val));
+       $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date(val),'human');
+       console.log($scope.registro.data_nascimento,$scope.registro.data_nascimento_human)
+      },
+      disabledDates: [            //Optional
+        new Date(2016, 2, 16),
+        new Date(2015, 3, 16),
+        new Date(2015, 4, 16),
+        new Date(2015, 5, 16),
+        new Date('Wednesday, August 12, 2015'),
+        new Date("08-16-2016"),
+        new Date(1439676000000)
+      ],
+      from: new Date(2012, 1, 1), //Optional
+      to: new Date(2016, 10, 30), //Optional
+      inputDate: new Date(),      //Optional
+      mondayFirst: true,          //Optional
+      disableWeekdays: [0],       //Optional
+      closeOnSelect: false,       //Optional
+      templateType: 'popup'       //Optional
+    };
+
+    $scope.openDatePicker = function(){
+      ionicDatePicker.openDatePicker(ipObj1);
+    };
+
+
   if(localStorage.getItem('ContinuaRegistro')){
 
       $scope.registros_offline_local = localStorage.getItem('registros');
@@ -142,8 +182,9 @@ localStorage.removeItem('ContinuaRegistro');
         uf: ''
     };  
   }
-
-
+if($scope.registro.data_nascimento){
+$scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.registro.data_nascimento),'human');
+}
     $.ajax({
               type: "GET",
               dataType: 'json',
@@ -211,14 +252,7 @@ localStorage.removeItem('ContinuaRegistro');
 
             });
       };
-    $scope.getFormattedDate = function(date) {
-      var year = date.getFullYear();
-      var month = (1 + date.getMonth()).toString();
-      month = month.length > 1 ? month : '0' + month;
-      var day = date.getDate().toString();
-      day = day.length > 1 ? day : '0' + day;
-      return year + '-' + month + '-' + day;
-    }
+ 
      $scope.ToCommaJson = function(json){
        var res = $.map(json,function(data){ return data.toString().replace(',', '<br/>'); });
        return res;
@@ -284,7 +318,7 @@ localStorage.removeItem('ContinuaRegistro');
                 503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
-                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg));  $scope.GuardaOffline(); }
+                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg));  $ionicLoading.hide(); }
               },
             success: function( data ) {
                 $scope.registros_offline_local = localStorage.getItem('registros');
