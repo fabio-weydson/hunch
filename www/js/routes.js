@@ -31,12 +31,14 @@ angular.module('app.routes', [])
 
   .state('consultar', {
     url: '/consultar',
+     cache: false,
     templateUrl: 'templates/consultar.html',
     controller: 'consultarCtrl'
   })
 
   .state('sucesso', {
     url: '/sucesso:mensagem',
+     cache: false,
     templateUrl: 'templates/sucesso.html',
     controller: 'sucessoCtrl'
   })

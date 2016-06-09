@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget 
   id="com.hunchway.app" 
-  version="0.8" 
+  version="0.9" 
   xmlns:gap="http://phonegap.com/ns/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns="http://www.w3.org/ns/widgets" 
@@ -60,6 +60,8 @@
 <gap:plugin name="nl.x-services.plugins.socialsharing" source="pgb" version="4.3.8" />
 <gap:plugin name="nl.x-services.plugins.toast" source="pgb" version="2.0.2" />
  <gap:plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
+ <gap:plugin name="com.plugins.shortcut" spec="0.1.1" source="pgb" />
+
 <icon src="icon.png" />
 <splash src="splash.png" /> 
 

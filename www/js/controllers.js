@@ -3,6 +3,14 @@ angular.module('app.controllers', [])
 .controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
 localStorage.removeItem('ContinuaRegistro');
 
+  $scope.CloseApp = function(){
+      if (navigator.app) {
+            navigator.app.exitApp();
+        } else if (navigator.device) {
+            navigator.device.exitApp();
+      }
+  }
+
  $scope.AtualizaOffline = function(id,res){
         $scope.registros_offline_local = localStorage.getItem('registros');
         $scope.registros_offline = JSON.parse($scope.registros_offline_local);
@@ -10,7 +18,9 @@ localStorage.removeItem('ContinuaRegistro');
       if(res=='excluir'){
           delete $scope.registros_offline[id];
           localStorage.setItem('registros', JSON.stringify($scope.registros_offline));
-
+           $scope.registros_offline_local = localStorage.getItem('registros');
+        $scope.registros_offline = JSON.parse($scope.registros_offline_local);
+        console.log($scope.registros_offline_local)
       } 
     }
    // Triggered on a button click, or some other target
@@ -20,8 +30,8 @@ localStorage.removeItem('ContinuaRegistro');
      buttons: [
        { text: 'Sincronizar' }
      ],
-     destructiveText: 'Excluir',
-     cancelText: 'Cancelar',
+     destructiveText: 'EXCLUIR',
+     cancelText: 'CANCELAR',
      cancel: function() {
           return false;
         },
@@ -32,7 +42,7 @@ localStorage.removeItem('ContinuaRegistro');
      },
      destructiveButtonClicked: function(index) {
        $scope.AtualizaOffline(reg_id,'excluir');
-        $scope.registros_offline_local = false;
+        
        $('#'+reg_id).fadeOut(500, function(){
          hideSheet();
 
@@ -54,7 +64,7 @@ localStorage.removeItem('ContinuaRegistro');
     }
      
       if(!$scope.registros_offline){
-          localStorage.setItem('registros','');   
+          localStorage.setItem('registros','{}');   
       }
 
 
@@ -110,7 +120,6 @@ localStorage.removeItem('ContinuaRegistro');
       $scope.registros_offline = JSON.parse($scope.registros_offline_local );
       $scope.registro_continuar = localStorage.getItem('ContinuaRegistro');
       $scope.registro = $scope.registros_offline[$scope.registro_continuar];
-      console.log($scope.registro);
 
   } else {
 	$scope.rand = Math.floor((Math.random() * 999999999999) + 1);
@@ -151,7 +160,6 @@ localStorage.removeItem('ContinuaRegistro');
     });
   
   $scope.ContinuaRegistro = function(form) {
-    console.log($scope.registro)
         registroService.setRegistro($scope.registro);
  
         $state.go('endereco', {cep: $scope.registro.cep});
@@ -236,7 +244,6 @@ localStorage.removeItem('ContinuaRegistro');
         $ionicLoading.hide();
     }
     $scope.AtualizaOffline = function(id,res){
-      console.log(id+res);
         $scope.registros_offline_local = localStorage.getItem('registros');
         $scope.registros_offline = JSON.parse($scope.registros_offline_local);
 
@@ -280,7 +287,7 @@ localStorage.removeItem('ContinuaRegistro');
                 503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
-                412: function(msg) {  $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg)); $ionicLoading.hide(); }
+                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg));  $scope.GuardaOffline(); }
               },
             success: function( data ) {
                 $scope.registros_offline_local = localStorage.getItem('registros');
@@ -308,14 +315,12 @@ localStorage.removeItem('ContinuaRegistro');
                       cidade: '',
                       uf: ''
                   };  
-                 $state.go('sucesso');
+                 $state.go('sucesso', {mensagem: data.cadastro_sucesso.mensagem});
 
                 
             },
             timeout: 10000,
             error: function(jqXHR, textStatus, errorThrown) {
-
-              console.log(textStatus)
               if(textStatus=='timeout'){
                 $scope.showAlert('Tempo excedido','Esgotado o tempo limite, tente novamente mais tarde.');  $scope.GuardaOffline();
               } else {
@@ -362,6 +367,13 @@ localStorage.removeItem('ContinuaRegistro');
     }
 
     $scope.consultarCadastro = function(form) {
+
+       document.addEventListener("offline", onOffline, false);
+      function onOffline() {
+         $scope.showAlert('Sem conexão com a internet', 'A consulta só está disponível quando há conexão com a internet.');
+         $scope.desativado = true;
+         return false;
+    }
           $ionicLoading.show({
           template: 'Consultando...'
         });
@@ -424,6 +436,7 @@ localStorage.removeItem('ContinuaRegistro');
    
 .controller('sucessoCtrl', function($scope, $stateParams, $state) {
     $scope.mensagem = $stateParams.mensagem;
+
 })
 
 .controller('termosCtrl', function($scope, $stateParams, $state,$http,$ionicLoading) {

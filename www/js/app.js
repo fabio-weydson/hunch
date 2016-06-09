@@ -15,6 +15,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(false);
     }
+    document.addEventListener('focusout', function(e) {window.scrollTo(0, 0)});
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
