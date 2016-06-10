@@ -102,6 +102,9 @@ localStorage.removeItem('ContinuaRegistro');
         }
 	}   
 
+  $scope.goHome = function(){
+    $state.go('principal', {}, {reload: true});
+  }
     $scope.goConsultar = function(){
             $state.go('consultar');
     }  
