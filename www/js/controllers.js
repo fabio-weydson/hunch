@@ -365,9 +365,9 @@ $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.
 
         });
     }
-    if(!$scope.registro.endereco){
+    
       $scope.BuscaCEP();
-    }
+    
 })
    
 .controller('consultarCtrl', function($scope,$stateParams,$state, $http, $ionicLoading, $ionicPopup) {
