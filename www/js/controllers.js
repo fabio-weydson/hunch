@@ -63,6 +63,9 @@ localStorage.removeItem('ContinuaRegistro');
     $scope.registros_offline_local = localStorage.getItem('registros');
     if($scope.registros_offline_local){
      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
+    } else {
+     $scope.registros_offline_local = '{}';
+     console.log('asdasd')
     }
     
       if(!$scope.registros_offline){
@@ -361,9 +364,10 @@ $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.
             error: function(jqXHR, textStatus, errorThrown) {
               if(textStatus=='timeout'){
                 $scope.showAlert('Tempo excedido','Esgotado o tempo limite, tente novamente mais tarde.');  $scope.GuardaOffline();
-              } else {
-                $scope.showAlert('Sem conexão','Os dados serão armazenados e poderão ser sincronizados quando houver conexão');  $scope.GuardaOffline();
-              }
+              } 
+              // else {
+              //   $scope.showAlert('Sem conexão','Os dados serão armazenados e poderão ser sincronizados quando houver conexão');  $scope.GuardaOffline();
+              // }
             }
 
         });
