@@ -1,10 +1,6 @@
 angular.module('app.controllers', [])
   
-<<<<<<< HEAD
 .controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout,registroService,$interval) {
-=======
-.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout,registroService) {
->>>>>>> d80dfeae2925ae7f2be0f85ca72e7275cfd5853d
 localStorage.removeItem('ContinuaRegistro');
   $scope.CloseApp = function(){
       if (navigator.app) {
@@ -123,15 +119,11 @@ localStorage.removeItem('ContinuaRegistro');
    
 })
    
-<<<<<<< HEAD
 .controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService,ionicDatePicker,$interval) {
   $scope.tempo = $stateParams.version;
 
     console.log($scope.tempo);
   
-=======
-.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService,ionicDatePicker) {
->>>>>>> d80dfeae2925ae7f2be0f85ca72e7275cfd5853d
    $scope.getFormattedDate = function(date,type) {
       var year = date.getFullYear();
       var month = (1 + date.getMonth()).toString();
@@ -150,18 +142,6 @@ localStorage.removeItem('ContinuaRegistro');
        $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date(val),'human');
        console.log($scope.registro.data_nascimento,$scope.registro.data_nascimento_human)
       },
-<<<<<<< HEAD
-=======
-      disabledDates: [            //Optional
-        new Date(2016, 2, 16),
-        new Date(2015, 3, 16),
-        new Date(2015, 4, 16),
-        new Date(2015, 5, 16),
-        new Date('Wednesday, August 12, 2015'),
-        new Date("08-16-2016"),
-        new Date(1439676000000)
-      ],
->>>>>>> d80dfeae2925ae7f2be0f85ca72e7275cfd5853d
       from: new Date(2012, 1, 1), //Optional
       to: new Date(2016, 10, 30), //Optional
       inputDate: new Date(),      //Optional
