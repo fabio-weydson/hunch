@@ -7,7 +7,7 @@
         <div class="spacer" style="width: 283.2px; height: 60px;"></div>
             <div class="list">
                 <ion-item class="item-divider">Aguardando sincronização</ion-item>
-                <ion-item class="item-button-right"  ng-if="registros_offline_local == '{}'">
+                <ion-item class="item-button-right" ng-if="registros_offline_local == '{}'">
                 <h2>Nenhum registro</h2>
                 </ion-item>
                 <ion-item  ng-click="show(reg.id)" class="item-button-right" ng-repeat="reg in registros_offline" id="{{reg.id}}">

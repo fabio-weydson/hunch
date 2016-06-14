@@ -18,7 +18,7 @@ angular.module('app.routes', [])
   })
 
   .state('registro', {
-    url: '/registro:TipoCadastro1:TipoCadastro2:TipoCadastro3',
+    url: '/registro:TipoCadastro1:TipoCadastro2:TipoCadastro3:version:ContinuaRegistro',
     templateUrl: 'templates/registro.html',
     controller: 'registroCtrl'
   })

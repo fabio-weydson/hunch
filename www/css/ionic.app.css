@@ -3797,7 +3797,7 @@ a.subdued {
     pointer-events: none; }
   .action-sheet-open .action-sheet-backdrop {
     pointer-events: auto; }
-
+/* 
 .platform-android .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.2); }
 
@@ -3826,7 +3826,7 @@ a.subdued {
   display: none; }
 
 .platform-android .action-sheet-has-icons .button {
-  padding-left: 56px; }
+  padding-left: 56px; } */
 
 .backdrop {
   position: fixed;
@@ -8537,7 +8537,8 @@ progress {
     right: -6px;
     bottom: -6px;
     left: -6px;
-    content: ' '; }
+    content: ' ';
+    }
   .button .icon {
     vertical-align: top;
     pointer-events: none; }
@@ -8545,9 +8546,10 @@ progress {
     display: inline-block;
     padding: 0 0 1px 0;
     vertical-align: inherit;
-    font-size: 24px;
-    line-height: 41px;
-    pointer-events: none; }
+    font-size: 30px;
+    line-height: 21px;
+    pointer-events: none;
+    }
   .button.icon-left:before {
     float: left;
     padding-right: .2em;
@@ -8715,8 +8717,9 @@ progress {
         color: #fff; }
   .button.button-energized {
     border-color: transparent;
-    background-color: #ffc900;
-    color: #fff; }
+    background-color: #FFB100;
+    color: #fff;
+    }
     .button.button-energized:hover {
       color: #fff;
       text-decoration: none; }
@@ -8886,7 +8889,8 @@ input.button.button-block {
 a.button {
   text-decoration: none; }
   a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button.icon-right:before {
-    margin-top: 2px; }
+    margin-top: 2px;
+    }
 
 .button.disabled,
 .button[disabled] {

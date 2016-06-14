@@ -1,8 +1,7 @@
 angular.module('app.controllers', [])
   
-.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout) {
+.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout,registroService,$interval) {
 localStorage.removeItem('ContinuaRegistro');
-
   $scope.CloseApp = function(){
       if (navigator.app) {
             navigator.app.exitApp();
@@ -10,7 +9,11 @@ localStorage.removeItem('ContinuaRegistro');
             navigator.device.exitApp();
       }
   }
-
+ var tick = function() {
+    $scope.tempo = Date.now();
+  }
+  tick();
+  $interval(tick, 1000);
  $scope.AtualizaOffline = function(id,res){
         $scope.registros_offline_local = localStorage.getItem('registros');
         $scope.registros_offline = JSON.parse($scope.registros_offline_local);
@@ -28,16 +31,17 @@ localStorage.removeItem('ContinuaRegistro');
    // Show the action sheet
    var hideSheet = $ionicActionSheet.show({
      buttons: [
-       { text: 'Sincronizar' }
+       { text: '<i class="icon ion-upload"></i> Sincronizar' }
      ],
-     destructiveText: 'EXCLUIR',
-     cancelText: 'CANCELAR',
+     destructiveText: '<i class="icon ion-ios-trash"></i> Excluir',
+     cancelText: 'Cancelar',
      cancel: function() {
           return false;
         },
      buttonClicked: function(index) {
-       localStorage.setItem('ContinuaRegistro',reg_id);
-        $state.go('registro');
+        localStorage.setItem('ContinuaRegistro',reg_id);
+        $scope.ContinuaRegistro = reg_id;
+        $state.go('registro',  {ContinuaRegistro: reg_id},{reload: true});
        return true;
      },
      destructiveButtonClicked: function(index) {
@@ -45,7 +49,6 @@ localStorage.removeItem('ContinuaRegistro');
         
        $('#'+reg_id).fadeOut(500, function(){
          hideSheet();
-
        });
      }
    });
@@ -59,14 +62,12 @@ localStorage.removeItem('ContinuaRegistro');
 
     $scope.registros_offline_local = localStorage.getItem('registros');
     if($scope.registros_offline_local){
-      $scope.registros_offline_local_total = true;
      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
     }
-     
+    
       if(!$scope.registros_offline){
           localStorage.setItem('registros','{}');   
       }
-
 
 
    $scope.showAlert = function(title,msg) {
@@ -99,13 +100,18 @@ localStorage.removeItem('ContinuaRegistro');
     }
  
     $scope.goRegistro = function(){
+
         if($scope.prosseguir){
-		      $state.go('registro', {TipoCadastro1: $scope.registro.tipo1,TipoCadastro2: $scope.registro.tipo2,TipoCadastro3: $scope.registro.tipo3});
+
+		      $state.go('registro', {TipoCadastro1: $scope.registro.tipo1,TipoCadastro2: $scope.registro.tipo2,TipoCadastro3: $scope.registro.tipo3, version: $scope.tempo}, {reload: true});
         } else {
           $scope.showAlert('Erro','Selecione um ou mais tipos de cadastro'); 
         }
 	}   
 
+  $scope.goHome = function(){
+    $state.go('principal', {}, {reload: true});
+  }
     $scope.goConsultar = function(){
             $state.go('consultar');
     }  
@@ -113,7 +119,43 @@ localStorage.removeItem('ContinuaRegistro');
    
 })
    
-.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService) {
+.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService,ionicDatePicker,$interval) {
+  $scope.tempo = $stateParams.version;
+
+    console.log($scope.tempo);
+  
+   $scope.getFormattedDate = function(date,type) {
+      var year = date.getFullYear();
+      var month = (1 + date.getMonth()).toString();
+      month = month.length > 1 ? month : '0' + month;
+      var day = date.getDate().toString();
+      day = day.length > 1 ? day : '0' + day;
+      if(type=='human'){
+        return day + '/' + month + '/' + year;
+      } else {
+        return year + '-' + month + '-' + day;
+      }
+    }
+  var ipObj1 = {
+      callback: function (val) {  //Mandatory
+       $scope.registro.data_nascimento = $scope.getFormattedDate(new Date(val));
+       $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date(val),'human');
+       console.log($scope.registro.data_nascimento,$scope.registro.data_nascimento_human)
+      },
+      from: new Date(2012, 1, 1), //Optional
+      to: new Date(2016, 10, 30), //Optional
+      inputDate: new Date(),      //Optional
+      mondayFirst: true,          //Optional
+      disableWeekdays: [0],       //Optional
+      closeOnSelect: false,       //Optional
+      templateType: 'popup'       //Optional
+    };
+
+    $scope.openDatePicker = function(){
+      ionicDatePicker.openDatePicker(ipObj1);
+    };
+
+
   if(localStorage.getItem('ContinuaRegistro')){
 
       $scope.registros_offline_local = localStorage.getItem('registros');
@@ -122,6 +164,7 @@ localStorage.removeItem('ContinuaRegistro');
       $scope.registro = $scope.registros_offline[$scope.registro_continuar];
 
   } else {
+    console.log('asdsad');
 	$scope.rand = Math.floor((Math.random() * 999999999999) + 1);
 
       $scope.registro = {
@@ -145,8 +188,9 @@ localStorage.removeItem('ContinuaRegistro');
         uf: ''
     };  
   }
-
-
+if($scope.registro.data_nascimento){
+$scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.registro.data_nascimento),'human');
+}
     $.ajax({
               type: "GET",
               dataType: 'json',
@@ -214,14 +258,7 @@ localStorage.removeItem('ContinuaRegistro');
 
             });
       };
-    $scope.getFormattedDate = function(date) {
-      var year = date.getFullYear();
-      var month = (1 + date.getMonth()).toString();
-      month = month.length > 1 ? month : '0' + month;
-      var day = date.getDate().toString();
-      day = day.length > 1 ? day : '0' + day;
-      return year + '-' + month + '-' + day;
-    }
+ 
      $scope.ToCommaJson = function(json){
        var res = $.map(json,function(data){ return data.toString().replace(',', '<br/>'); });
        return res;
@@ -287,7 +324,7 @@ localStorage.removeItem('ContinuaRegistro');
                 503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 404: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
-                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg));  $scope.GuardaOffline(); }
+                412: function(msg) {  var msg = JSON.parse(msg.responseText); $scope.showAlert('Falha na operação',$scope.ToCommaJson(msg));  $ionicLoading.hide(); }
               },
             success: function( data ) {
                 $scope.registros_offline_local = localStorage.getItem('registros');
@@ -331,9 +368,9 @@ localStorage.removeItem('ContinuaRegistro');
 
         });
     }
-    if(!$scope.registro.endereco){
+    
       $scope.BuscaCEP();
-    }
+    
 })
    
 .controller('consultarCtrl', function($scope,$stateParams,$state, $http, $ionicLoading, $ionicPopup) {
@@ -369,12 +406,12 @@ localStorage.removeItem('ContinuaRegistro');
 
     $scope.consultarCadastro = function(form) {
 
-       document.addEventListener("offline", onOffline, false);
+      document.addEventListener("offline", onOffline, false);
       function onOffline() {
          $scope.showAlert('Sem conexão com a internet', 'A consulta só está disponível quando há conexão com a internet.');
          $scope.desativado = true;
-         return false;
-    }
+         $state.go('principal');
+      }
           $ionicLoading.show({
           template: 'Consultando...'
         });
@@ -412,6 +449,7 @@ localStorage.removeItem('ContinuaRegistro');
                         });
                 },
             error: function(data){
+                 onOffline();
 
             }
         });
