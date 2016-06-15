@@ -43,6 +43,10 @@
 <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+  
+<feature name="http://api.phonegap.com/1.0/device"/>
+<feature name="http://api.phonegap.com/1.0/file"/>
+<feature name="http://api.phonegap.com/1.0/network"/>
 
       <gap:plugin name="cordova-plugin-device" source="npm" version="1.0.1"/> 
 <gap:plugin name="cordova-plugin-device-motion" source="npm" version="1.1.1" />
