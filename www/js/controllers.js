@@ -116,7 +116,7 @@ localStorage.removeItem('ContinuaRegistro');
     $state.go('principal', {}, {reload: true});
   }
     $scope.goConsultar = function(){
-            $state.go('consultar');
+            $state.go('consultar', {version: $scope.tempo},{reload: true});
     }  
  
    
@@ -323,6 +323,7 @@ $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.
             dataType: 'json',
             url: "http://www.hunchway.com.br/api/client",
             statusCode: {
+                0: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 400: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },

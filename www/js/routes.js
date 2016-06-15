@@ -30,7 +30,7 @@ angular.module('app.routes', [])
   })
 
   .state('consultar', {
-    url: '/consultar',
+    url: '/consultar:version',
      cache: false,
     templateUrl: 'templates/consultar.html',
     controller: 'consultarCtrl'

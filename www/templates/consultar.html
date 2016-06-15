@@ -13,7 +13,7 @@
                 <input type="tel" placeholder="CPF"  ng-disabled="desativado"  required ng-model="registro.cpf" ui-mask="999.999.999-99"  ui-mask-placeholder ui-mask-placeholder-char="_">
             </label>
         </form>
-        <a ng-click="consultarCadastro()" id="consultar-button12" ng-disabled="desativado" class=" button button-positive  button-block " ng-disabled="myForm3.$invalid">CONSULTAR CADASTRO</a>
+        <a ng-click="consultarCadastro()" id="consultar-button12" required  class=" button button-positive  button-block " ng-disabled="desativado || myForm3.$invalid">CONSULTAR CADASTRO</a>
         <a ui-sref="principal" id="consultar-button15" class=" button button-positive  button-block button-clear ">ou Realizar Cadastro</a>
     </ion-content>
 </ion-view>
