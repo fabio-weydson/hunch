@@ -125,24 +125,19 @@ localStorage.removeItem('ContinuaRegistro');
         return year + '-' + month + '-' + day;
       }
     }
+var currdate = new Date();
+currdate.setFullYear(currdate.getFullYear() - 18);
   var ipObj1 = {
+
       callback: function (val) {  //Mandatory
+        console.log(val)
        $scope.registro.data_nascimento = $scope.getFormattedDate(new Date(val));
        $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date(val),'human');
        console.log($scope.registro.data_nascimento,$scope.registro.data_nascimento_human)
       },
-      disabledDates: [            //Optional
-        new Date(2016, 2, 16),
-        new Date(2015, 3, 16),
-        new Date(2015, 4, 16),
-        new Date(2015, 5, 16),
-        new Date('Wednesday, August 12, 2015'),
-        new Date("08-16-2016"),
-        new Date(1439676000000)
-      ],
-      from: new Date(2012, 1, 1), //Optional
-      to: new Date(2016, 10, 30), //Optional
-      inputDate: new Date(),      //Optional
+      from: new Date(1950, 1, 1), //Optional
+      to: new Date(1998, 10, 30), //Optional
+      inputDate: currdate,      //Optional
       mondayFirst: true,          //Optional
       disableWeekdays: [0],       //Optional
       closeOnSelect: false,       //Optional
