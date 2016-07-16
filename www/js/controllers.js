@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
   
-.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout,registroService) {
+.controller('principalCtrl', function($scope,$state,  $ionicPopup, $ionicActionSheet,  $timeout,registroService,$interval) {
 localStorage.removeItem('ContinuaRegistro');
   $scope.CloseApp = function(){
       if (navigator.app) {
@@ -9,7 +9,11 @@ localStorage.removeItem('ContinuaRegistro');
             navigator.device.exitApp();
       }
   }
-
+ var tick = function() {
+    $scope.tempo = Date.now();
+  }
+  tick();
+  $interval(tick, 1000);
  $scope.AtualizaOffline = function(id,res){
         $scope.registros_offline_local = localStorage.getItem('registros');
         $scope.registros_offline = JSON.parse($scope.registros_offline_local);
@@ -35,8 +39,9 @@ localStorage.removeItem('ContinuaRegistro');
           return false;
         },
      buttonClicked: function(index) {
-       localStorage.setItem('ContinuaRegistro',reg_id);
-        $state.go('registro');
+        localStorage.setItem('ContinuaRegistro',reg_id);
+        $scope.ContinuaRegistro = reg_id;
+        $state.go('registro',  {ContinuaRegistro: reg_id},{reload: true});
        return true;
      },
      destructiveButtonClicked: function(index) {
@@ -58,6 +63,9 @@ localStorage.removeItem('ContinuaRegistro');
     $scope.registros_offline_local = localStorage.getItem('registros');
     if($scope.registros_offline_local){
      $scope.registros_offline = JSON.parse($scope.registros_offline_local );
+    } else {
+     $scope.registros_offline_local = '{}';
+     console.log('asdasd')
     }
     
       if(!$scope.registros_offline){
@@ -95,8 +103,10 @@ localStorage.removeItem('ContinuaRegistro');
     }
  
     $scope.goRegistro = function(){
+
         if($scope.prosseguir){
-		      $state.go('registro', {TipoCadastro1: $scope.registro.tipo1,TipoCadastro2: $scope.registro.tipo2,TipoCadastro3: $scope.registro.tipo3});
+
+		      $state.go('registro', {TipoCadastro1: $scope.registro.tipo1,TipoCadastro2: $scope.registro.tipo2,TipoCadastro3: $scope.registro.tipo3, version: $scope.tempo}, {reload: true});
         } else {
           $scope.showAlert('Erro','Selecione um ou mais tipos de cadastro'); 
         }
@@ -106,13 +116,17 @@ localStorage.removeItem('ContinuaRegistro');
     $state.go('principal', {}, {reload: true});
   }
     $scope.goConsultar = function(){
-            $state.go('consultar');
+            $state.go('consultar', {version: $scope.tempo},{reload: true});
     }  
  
    
 })
    
-.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService,ionicDatePicker) {
+.controller('registroCtrl', function($scope,$stateParams,$state, $http,registroService,ionicDatePicker,$interval) {
+  $scope.tempo = $stateParams.version;
+
+    console.log($scope.tempo);
+  
    $scope.getFormattedDate = function(date,type) {
       var year = date.getFullYear();
       var month = (1 + date.getMonth()).toString();
@@ -157,6 +171,7 @@ currdate.setFullYear(currdate.getFullYear() - 18);
       $scope.registro = $scope.registros_offline[$scope.registro_continuar];
 
   } else {
+    console.log('asdsad');
 	$scope.rand = Math.floor((Math.random() * 999999999999) + 1);
 
       $scope.registro = {
@@ -312,6 +327,7 @@ $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.
             dataType: 'json',
             url: "http://www.hunchway.com.br/api/client",
             statusCode: {
+                0: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 400: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 503: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
                 500: function(msg) { $scope.showAlert('Falha na conexao','Tente novamente');  $scope.GuardaOffline(); },
@@ -353,9 +369,10 @@ $scope.registro.data_nascimento_human = $scope.getFormattedDate(new Date($scope.
             error: function(jqXHR, textStatus, errorThrown) {
               if(textStatus=='timeout'){
                 $scope.showAlert('Tempo excedido','Esgotado o tempo limite, tente novamente mais tarde.');  $scope.GuardaOffline();
-              } else {
-                $scope.showAlert('Sem conexão','Os dados serão armazenados e poderão ser sincronizados quando houver conexão');  $scope.GuardaOffline();
-              }
+              } 
+              // else {
+              //   $scope.showAlert('Sem conexão','Os dados serão armazenados e poderão ser sincronizados quando houver conexão');  $scope.GuardaOffline();
+              // }
             }
 
         });
