@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget 
   id="com.hunchway.app" 
-  version="1.0" 
+  version="1.1" 
   xmlns:gap="http://phonegap.com/ns/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns="http://www.w3.org/ns/widgets" 
@@ -106,7 +106,7 @@
     <gap:splash gap:platform="ios" height="768" src="resources/ios/splash/screen-ipad-landscape.png" width="1024" />
 
   <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>00126</string>
+    <string>00127</string>
     </gap:config-file>
     <gap:config-file platform="android" parent="/manifest/application">
     <activity android:launchMode="singleInstance" />
